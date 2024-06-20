@@ -12,9 +12,29 @@ import json
 from PIL import Image
 import random
 import parsel
+import sys
+import configparser
+#Config Parser
+config = configparser.ConfigParser()
+config.read('config.ini')
+
 app = Flask(__name__)
-configuration = Configuration(access_token='8ihzltg+k6o4M2scisl9FO12/+uLGy4rTt0AKE+IJEopWcyd+W99gGHguYradgaBDsjJtFCs75P4EC7C7pQiWyph9w6Dyto03UMBYv+tLXLUAkWAs4jJ11quHcSMCA7fqP5158+pmLgifcWfL523ygdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('10a1c6bd5fdecc396cf6e077e4bedbda')
+
+channel_access_token = config['Line']['CHANNEL_ACCESS_TOKEN']
+channel_secret = config['Line']['CHANNEL_SECRET']
+if channel_secret is None:
+    print('Specify LINE_CHANNEL_SECRET as environment variable.')
+    sys.exit(1)
+if channel_access_token is None:
+    print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
+    sys.exit(1)
+
+handler = WebhookHandler(channel_secret)
+
+configuration = Configuration(
+    access_token=channel_access_token
+)
+
 import re
 import os
 import requests
